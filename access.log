@@ -1,0 +1,7 @@
+e4dbd5e9-7ba2-4ed2-9999-36bc11e45964 userToken GET 404 /home "HTTP/1.1"
+f6b88ecb-ab03-4068-8d36-46daf09c405a userToken GET 404 /about "HTTP/1.1"
+2adc92b1-8c70-4263-9869-9b649d35cb52 userToken GET 404 /about?name=Aditya "HTTP/1.1"
+0ce6bcfb-bc97-45c8-8eb3-4ae6966e47fd userToken GET 404 /CANNOTGET "HTTP/1.1"
+ae0ff801-07c6-4184-985d-8666885bf024 userToken GET 404 /ERROR "HTTP/1.1"
+c9145c4b-8039-469f-bd1e-7a440af65124 userToken GET 404 /hiiiii "HTTP/1.1"
+efed81b3-1187-44eb-8672-c8ac230a8d18 userToken GET 200 /api/student/ "HTTP/1.1"
