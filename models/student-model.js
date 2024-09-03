@@ -21,6 +21,9 @@ const studentSchema = new Schema({
     },
     contact: {
         type: String
+    },
+    password: {
+        type: String
     }
 
 }, {timestamps: true}) // TIMESTAMPS ADDS TWO ATTRIBUTES TO THE DATA, CREATED_AT AND UPDATED_AT
