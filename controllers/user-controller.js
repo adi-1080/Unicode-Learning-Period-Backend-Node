@@ -1,7 +1,28 @@
-const Student           = require('../models/student-model');
-const bcrypt            = require('bcryptjs')
-const jwt               = require('jsonwebtoken')
-const nodemailer        = require('nodemailer')
+const User              = require('../models/user-model');
+const bcrypt            = require('bcryptjs');
+const jwt               = require('jsonwebtoken');
+const nodemailer        = require('nodemailer');
+const uploadOnCloudinary= require('../utils/cloudinary')
+
+const uploadImage = (req,res,next) => {
+    try{
+        const localFilePath = req.file.path
+
+        const response = uploadOnCloudinary(localFilePath)
+
+        console.log('Successfully uploaded image on cloudinary',response);
+
+        res.status(200).json({
+            message: "Image Uploaded Successfully to Cloudinary"
+        })
+    } catch(err){
+        console.log('Error uploading image',err);
+        res.send({
+            message: "Some error occured",
+            data: response
+        })
+    }
+}
 
 const register = (req,res,next) => {
     bcrypt.hash(req.body.password,12, function(err, hashedPass){
@@ -10,19 +31,20 @@ const register = (req,res,next) => {
                 error: err
             })
         }
-        let student = new Student({
-            sapid: req.body.sapid,
+        
+        let user = new User({
             name: req.body.name,
-            department: req.body.department,
-            age: req.body.age,
             email: req.body.email,
             contact: req.body.contact,
             password: hashedPass
         })
-        student.save()
-        .then((student) => {
+        if(req.file){
+            user.avatar = req.file.path
+        }
+        user.save()
+        .then((User) => {
             res.json({
-                message: "Student registered successfully"
+                message: "User registered successfully"
             })
         })
         .catch((err) => {
@@ -37,13 +59,13 @@ const login = (req,res,next) => {
     var email = req.body.email
     var password = req.body.password
 
-    Student.findOne({$or: [{email:email},{phone:email}]})
-    .then((student) => {
-        if(student){
-            bcrypt.compare(password, student.password, function(err,result){
+    User.findOne({$or: [{email:email},{phone:email}]})
+    .then((User) => {
+        if(User){
+            bcrypt.compare(password, User.password, function(err,result){
                 
                 if(result){
-                    let token = jwt.sign({name: student.name}, process.env.SECRET_KEY, {expiresIn: '300s'})
+                    let token = jwt.sign({name: User.name}, process.env.SECRET_KEY, {expiresIn: '300s'})
                     res.json({
                         message: 'Login successful',
                         token: token
@@ -56,7 +78,7 @@ const login = (req,res,next) => {
             })
         } else{
             res.json({
-                message: "No student found"
+                message: "No User found"
             })
         }
     })
@@ -85,12 +107,12 @@ const login = (req,res,next) => {
     })
 }
 
-// Show the list of Students
+// Show the list of Users
 const index = async(req,res,next) => {
     try{
-        const result = await Student.find();
+        const result = await User.find();
         res.json({
-            "list-of-students": result,
+            "list-of-users": result,
         });
     }
     catch(error){
@@ -101,11 +123,11 @@ const index = async(req,res,next) => {
     }
 };
 
-// Show single student
+// Show single User
 const show = async(req,res,next) => {
-    let studentID = req.body.studentID;
+    let UserID = req.body.UserID;
     try{
-        const result = await Student.findById(studentID);
+        const result = await User.findById(UserID);
         res.json({result});
     }
     catch(error){
@@ -113,9 +135,9 @@ const show = async(req,res,next) => {
     }
 };
 
-// Add new student
+// Add new User
 const store = async(req,res,next) => {
-    let student = new Student({
+    let User = new User({
         sapid: req.body.sapid,
         name: req.body.name,
         department: req.body.department,
@@ -125,9 +147,9 @@ const store = async(req,res,next) => {
     });
 
     try{
-        const result = await student.save();
+        const result = await User.save();
         res.json({
-            message: "Student added successfully",
+            message: "User added successfully",
             'msg-result': result
         });
     }
@@ -138,9 +160,9 @@ const store = async(req,res,next) => {
     }
 };
 
-// Update a student
+// Update a User
 const update = async(req,res,next) => {
-    let studentID = req.body.studentID;
+    let UserID = req.body.UserID;
 
     // Input updated data from user
     let updatedData = {
@@ -153,9 +175,9 @@ const update = async(req,res,next) => {
     };
 
     try{
-        await Student.findByIdAndUpdate(studentID, { $set: updatedData });
+        await User.findByIdAndUpdate(UserID, { $set: updatedData });
         res.json({
-            message: "Student updated successfully"
+            message: "User updated successfully"
         });
     }
     catch(error){
@@ -165,14 +187,14 @@ const update = async(req,res,next) => {
     }
 };
 
-// Delete a student
+// Delete a User
 const destroy = async(req,res,next) => {
-    let studentID = req.body.studentID;
+    let UserID = req.body.UserID;
 
     try{
-        await Student.findByIdAndDelete(studentID);
+        await User.findByIdAndDelete(UserID);
         res.json({
-            message: "Student deleted successfully"
+            message: "User deleted successfully"
         });
     }
     catch(error){
@@ -184,5 +206,5 @@ const destroy = async(req,res,next) => {
 
 // Exporting the CRUD operations's functions that we just made above in the controller
 module.exports = {
-    index, show, store, update, destroy, register, login
+    index, show, store, update, destroy, register, login, uploadImage
 };

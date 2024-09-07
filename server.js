@@ -3,14 +3,17 @@ const express           = require('express')
 const mongoose          = require('mongoose')
 const morgan            = require('morgan')
 const bodyParser        = require('body-parser')
-const fs                = require('fs')
-const path              = require('path')
-const connectDB         = require('./connect-db')
+const connectDB         = require('./db/connect-db')
+
 
 const dotenv = require('dotenv')
 dotenv.config()
 
-const studentRoute      = require('./routes/student-route')
+
+
+
+
+const userRoute      = require('./routes/user-route')
 
 const { v4:uuidv4 }     = require('uuid')
 
@@ -23,6 +26,7 @@ const app = express()
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
+app.use('./public/uploads',express.static('uploads'))
 app.get('/',(req,res)=> res.json({msg:"Heyyy Brooo!!"}))
 
 const HOST = process.env.HOST || 'localhost'
@@ -53,4 +57,4 @@ app.listen(PORT, ()=>{
     console.log(`Server is running on http://${HOST}:${PORT}/`);
 })
 
-app.use('/api/student', studentRoute)
+app.use(userRoute)
