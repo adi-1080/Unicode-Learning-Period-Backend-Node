@@ -23,7 +23,7 @@ const signup = async(req,res,next)=>{
             let company = new Company({
                 company_id: req.body.company_id,
                 email: req.body.email,
-                password: req.body.email,
+                password: hashedPass,
                 company_name: req.body.name,
                 description: req.body.description,
                 website_url: req.body.website_url
@@ -47,58 +47,52 @@ const signup = async(req,res,next)=>{
     }
 }
 
-const login = async(req,res,next)=>{
+const login = async (req, res, next) => {
     try {
-        const {email,password} = req.body;
-        const comDoesNotExists = await Company.findOne({email})
-        if(comDoesNotExists){
-            res.status(400).json({message: 'Company doesn\'t exists'})
-        }
-        Company.findOne({email})
-        .then((company)=>{
-            bcrypt.compare(password, company.password, function(err,result){
-                if(result){
-                    let token = jwt.sign({company_id: company.company_id}, process.env.COM_SECRET, {expiresIn: '5m'})
-                    res.json({
-                        message: 'Login Success',
-                        token: token
-                    })
-                }
-                else{
-                    res.json({
-                        message: 'Password didn\'t match'
-                    })
-                }
-            })
-        })
+        const { email, password } = req.body;
 
-        let mailTransporter = nodemailer.createTransport({
+        const company = await Company.findOne({ email });
+        if (!company) {
+            return res.status(400).json({ message: 'Company doesn\'t exist' });
+        }
+
+        const isMatch = await bcrypt.compare(password, company.password);
+        if (!isMatch) {
+            return res.json({ message: 'Password didn\'t match' });
+        }
+
+        const token = jwt.sign({ company_id: company.company_id }, process.env.COM_SECRET, { expiresIn: '300s' });
+        res.json({ message: 'Login Success', token });
+        
+        const mailTransporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
                 user: process.env.EMAIL,
                 pass: process.env.PASSWORD
             }
-        })
+        });
 
-        let details = {
-            from: 'adityagupta5277@gmail.com',
-            to: req.body.email,
+        const details = {
+            from: process.env.EMAIL,
+            to: email,
             subject: 'Notify Login',
             text: 'Company Logged In'
-        }
+        };
 
-        mailTransporter.sendMail(details, (err)=>{
-            if(err){
-                res.json({err})
+        mailTransporter.sendMail(details, (err) => {
+            if (err) {
+                console.error('Error sending email:', err);
+            } else {
+                console.log('Email sent to company');
             }
-            else{
-                res.json({message: 'Email sent to company'})
-            }
-        })
+        });
+
     } catch (error) {
-        res.json({message: 'Error logging'})
+        console.error('Error logging in:', error);
+        res.status(500).json({ message: 'Error logging in' });
     }
-}
+};
+
 
 module.exports = {
     login, signup
