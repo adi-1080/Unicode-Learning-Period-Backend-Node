@@ -6,7 +6,7 @@ const authenticateRoute         = require('../middlewares/authenticate-route')
 const upload                    = require('../middlewares/multer')
 
 router.post('/upload',upload.single('user-photo'),userController.uploadImage)
-router.post('/register',upload.single('avatar'),userController.register)
+router.post('/register',upload.fields([{name:'avatar'},{name:'resume_url'}]),userController.register)
 router.post('/login',userController.login)
 
 router.get('/index',authenticateRoute,userController.index)

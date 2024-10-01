@@ -18,6 +18,21 @@ const userSchema = new Schema({
     },
     avatar: {
         type: String
+    },
+    resume_url: {
+        type: String
+    },
+    tech_stack:{
+        type: [String]
+    },
+    field_of_interest:{
+        type: String
+    },
+    experience_level:{
+        type: String
+    },
+    bio:{
+        type: String
     }
 
 }, {timestamps: true}) // TIMESTAMPS ADDS TWO ATTRIBUTES TO THE DATA, CREATED_AT AND UPDATED_AT

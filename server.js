@@ -9,11 +9,8 @@ const connectDB         = require('./db/connect-db')
 const dotenv = require('dotenv')
 dotenv.config()
 
-
-
-
-
 const userRoute      = require('./routes/user-route')
+const companyRoute   = require('./routes/company-route')
 
 const { v4:uuidv4 }     = require('uuid')
 
@@ -58,3 +55,4 @@ app.listen(PORT, ()=>{
 })
 
 app.use(userRoute)
+app.use('/company',companyRoute)

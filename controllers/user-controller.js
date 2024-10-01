@@ -36,11 +36,28 @@ const register = (req,res,next) => {
             name: req.body.name,
             email: req.body.email,
             contact: req.body.contact,
-            password: hashedPass
+            password: hashedPass,
+            tech_stack: req.body.tech_stack,
+            field_of_interest: req.body.field_of_interest,
+            experience_level: req.body.experience_level,
+            bio: req.body.bio   
         })
-        if(req.file){
-            user.avatar = req.file.path
+        if (req.files) {
+            if (req.files['avatar']) {
+                const avatarFilePath = req.files['avatar'][0].path;
+                const avatarResponse = uploadOnCloudinary(avatarFilePath);
+                user.avatar = avatarResponse.secure_url; // secure_url is provided by cloudinary
+                console.log('avatar uploaded');
+            }
+
+            if (req.files['resume_url']) {
+                const resumeFilePath = req.files['resume_url'][0].path;
+                const resumeResponse = uploadOnCloudinary(resumeFilePath);
+                user.resume_url = resumeResponse.secure_url; 
+                console.log('resume uploaded');
+            }
         }
+        
         user.save()
         .then((User) => {
             res.json({
