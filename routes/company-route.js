@@ -1,10 +1,10 @@
-const express = require('express')
+import express from 'express'
 const router = express.Router()
 
-const companyController = require('../controllers/company-controller')
-const authenticateRoute = require('../middlewares/authenticate-route')
+import companyController from '../controllers/company-controller.js'
+import authenticateRoute from '../middlewares/authenticate-route.js'
 
 router.post('/login',companyController.login)
-router.post('/signup',companyController.signup)
+router.post('/register',companyController.register)
 
-module.exports = router
+export default router

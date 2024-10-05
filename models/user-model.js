@@ -1,6 +1,5 @@
 // MODEL-VIEW-CONTROLLER IS THE MVC ARCHITECTURE
-
-const mongoose          = require('mongoose')
+import mongoose from 'mongoose'
 const Schema            = mongoose.Schema
 
 const userSchema = new Schema({
@@ -38,4 +37,4 @@ const userSchema = new Schema({
 }, {timestamps: true}) // TIMESTAMPS ADDS TWO ATTRIBUTES TO THE DATA, CREATED_AT AND UPDATED_AT
 
 const User = mongoose.model('User',userSchema)
-module.exports = User
+export default User

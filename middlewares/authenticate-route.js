@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken')
+import jwt from 'jsonwebtoken'
 
 const authenticateRoute = async (req,res,next) => {
     try {
@@ -15,5 +15,5 @@ const authenticateRoute = async (req,res,next) => {
     }
 }
 
-module.exports = authenticateRoute
+export default authenticateRoute
 

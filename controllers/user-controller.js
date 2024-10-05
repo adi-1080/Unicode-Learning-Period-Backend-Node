@@ -1,8 +1,8 @@
-const User              = require('../models/user-model');
-const bcrypt            = require('bcryptjs');
-const jwt               = require('jsonwebtoken');
-const nodemailer        = require('nodemailer');
-const uploadOnCloudinary= require('../utils/cloudinary')
+import User from '../models/user-model.js'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer'
+import uploadOnCloudinary from '../utils/cloudinary.js'
 
 const uploadImage = (req,res,next) => {
     try{
@@ -73,8 +73,8 @@ const register = (req,res,next) => {
 }
 
 const login = (req,res,next) => {
-    var email = req.body.email
-    var password = req.body.password
+    let email = req.body.email
+    let password = req.body.password
 
     User.findOne({$or: [{email:email},{phone:email}]})
     .then((User) => {
@@ -222,6 +222,4 @@ const destroy = async(req,res,next) => {
 };
 
 // Exporting the CRUD operations's functions that we just made above in the controller
-module.exports = {
-    index, show, store, update, destroy, register, login, uploadImage
-};
+export default {index, show, store, update, destroy, register, login, uploadImage}

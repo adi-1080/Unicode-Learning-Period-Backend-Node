@@ -1,10 +1,10 @@
-const Company = require('../models/company-model');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const uploadOnCloudinary = require('../utils/cloudinary');
+import Company from '../models/company-model.js'
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer'
+import uploadOnCloudinary from '../utils/cloudinary.js';
 
-const signup = async(req,res,next)=>{
+const register = async(req,res,next)=>{
     try {
 
         const {company_id,email,password,company_name,description,website_url} = req.body;
@@ -94,6 +94,4 @@ const login = async (req, res, next) => {
 };
 
 
-module.exports = {
-    login, signup
-}
+export default {login, register}

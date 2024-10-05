@@ -1,18 +1,18 @@
 // REQUIRING/GATHERING ALL MODULES
-const express           = require('express')
-const mongoose          = require('mongoose')
-const morgan            = require('morgan')
-const bodyParser        = require('body-parser')
-const connectDB         = require('./db/connect-db')
+import express from 'express'
+import mongoose from 'mongoose'
+import morgan from 'morgan'
+import bodyParser from 'body-parser'
+import connectDB from './db/connect-db.js'
 
 
-const dotenv = require('dotenv')
+import dotenv from 'dotenv'
 dotenv.config()
 
-const userRoute      = require('./routes/user-route')
-const companyRoute   = require('./routes/company-route')
+import userRoute from './routes/user-route.js'
+import companyRoute from './routes/company-route.js'
 
-const { v4:uuidv4 }     = require('uuid')
+import { v4 as uuidv4 } from 'uuid';
 
 connectDB();
 
@@ -54,5 +54,5 @@ app.listen(PORT, ()=>{
     console.log(`Server is running on http://${HOST}:${PORT}/`);
 })
 
-app.use(userRoute)
+app.use('/user',userRoute)
 app.use('/company',companyRoute)

@@ -1,9 +1,9 @@
-const express                   = require('express')
+import express from 'express'
 const router                    = express.Router()
 
-const userController            = require('../controllers/user-controller')
-const authenticateRoute         = require('../middlewares/authenticate-route')
-const upload                    = require('../middlewares/multer')
+import userController from '../controllers/user-controller.js'
+import authenticateRoute from '../middlewares/authenticate-route.js'
+import upload from '../middlewares/multer.js'
 
 router.post('/upload',upload.single('user-photo'),userController.uploadImage)
 router.post('/register',upload.fields([{name:'avatar'},{name:'resume_url'}]),userController.register)
@@ -15,4 +15,4 @@ router.post('/store',authenticateRoute, userController.store)
 router.post('/update',authenticateRoute, userController.update)
 router.post('/delete',authenticateRoute, userController.destroy)
 
-module.exports = router
+export default router
