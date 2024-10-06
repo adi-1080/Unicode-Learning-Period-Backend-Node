@@ -58,7 +58,7 @@ const login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
-        const recruiter = await Company.findOne({ email });
+        const recruiter = await Recruiter.findOne({ email });
         if (!recruiter) {
             return res.status(400).json({ message: 'Company doesn\'t exist' });
         }
@@ -83,14 +83,14 @@ const login = async (req, res, next) => {
             from: process.env.EMAIL,
             to: email,
             subject: 'Notify Login',
-            text: 'Company Logged In'
+            text: 'Recruiter Logged In'
         };
 
         mailTransporter.sendMail(details, (err) => {
             if (err) {
                 console.error('Error sending email:', err);
             } else {
-                console.log('Email sent to company');
+                console.log('Email sent to recruiter');
             }
         });
 

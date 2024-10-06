@@ -8,7 +8,7 @@ const register = async(req,res,next)=>{
     try {
 
         const {company_id,email,password,company_name,description,website_url} = req.body;
-        const comExists = Company.findOne({company_id});
+        const comExists = Company.findById(company_id);
         if(!comExists){
             res.status(400).json({message: 'Company already exists'})
         }
@@ -21,7 +21,6 @@ const register = async(req,res,next)=>{
             }
 
             let company = new Company({
-                company_id: req.body.company_id,
                 email: req.body.email,
                 password: hashedPass,
                 company_name: req.body.name,
