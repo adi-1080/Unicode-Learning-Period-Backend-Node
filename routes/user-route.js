@@ -9,10 +9,10 @@ router.post('/upload',upload.single('user-photo'),userController.uploadImage)
 router.post('/register',upload.fields([{name:'avatar'},{name:'resume_url'}]),userController.register)
 router.post('/login',userController.login)
 
-router.get('/index',authenticateRoute,userController.index)
-router.post('/show', authenticateRoute, userController.show)
-router.post('/store',authenticateRoute, userController.store)
-router.post('/update',authenticateRoute, userController.update)
-router.post('/delete',authenticateRoute, userController.destroy)
+router.get('/index',authenticateRoute.authUser,userController.index)
+router.post('/show', authenticateRoute.authUser, userController.show)
+router.post('/store',authenticateRoute.authUser, userController.store)
+router.post('/update',authenticateRoute.authUser, userController.update)
+router.post('/delete',authenticateRoute.authUser, userController.destroy)
 
 export default router

@@ -19,7 +19,8 @@ const companySchema = new Schema({
     },
     website_url:{
         type: String
-    }
+    },
+    recruiters: [{type: mongoose.Schema.Types.ObjectId, ref:'Recruiter'}]
 })
 
 const Company = mongoose.model('Company',companySchema)
