@@ -68,7 +68,7 @@ const login = async (req, res, next) => {
             return res.json({ message: 'Password didn\'t match' });
         }
 
-        const token = jwt.sign({ company_id: recruiter.company_id }, process.env.COM_SECRET, { expiresIn: '300s' });
+        const token = jwt.sign({ company_id: recruiter.company_id }, process.env.COM_SECRET, { expiresIn: '300s' }); //mak
         res.json({ message: 'Recruiter Login Success', token });
         
         const mailTransporter = nodemailer.createTransport({
