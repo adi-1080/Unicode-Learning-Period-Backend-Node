@@ -29,7 +29,7 @@ const jobSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
     }
-})
+}, {timestamps: true})
 
 const Job = mongoose.model('Job', jobSchema)
 export default Job

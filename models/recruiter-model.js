@@ -33,7 +33,7 @@ const recruiterSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Company'
     }
-})
+}, {timestamps: true})
 
 const Recruiter = mongoose.model('Recruiter',recruiterSchema)
 

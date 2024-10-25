@@ -21,7 +21,7 @@ const companySchema = new Schema({
         type: String
     },
     recruiters: [{type: mongoose.Schema.Types.ObjectId, ref:'Recruiter'}]
-})
+}, {timestamps: true})
 
 const Company = mongoose.model('Company',companySchema)
 export default Company

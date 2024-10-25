@@ -4,6 +4,29 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 import uploadOnCloudinary from '../utils/cloudinary.js';
+import Application from "../models/application-model.js";
+import Job from "../models/job-model.js";
+
+
+const viewApplications = async (req,res) => {
+    try {
+        console.log("Fetching jobs for company:", req.recruiter.company_id);//
+
+        const list_jobs = await Job.find({company_id: req.recruiter.company_id})
+        const list_jobIds = list_jobs.map(job => job._id)
+
+        console.log("Job IDs for this company:", list_jobIds);//
+
+        const list_applications = await Application.find({job_id: {$in: list_jobIds}})
+        .populate('user_id','name email')
+        .populate('job_id','title description')
+
+        res.status(200).json({message: "Viewing applicants",list_applications})
+
+    } catch (err) {
+        res.status(500).json({message: "Could not fetch applications", error: err})
+    }
+}
 
 const register = async(req,res,next)=>{
     try {
@@ -60,7 +83,7 @@ const login = async (req, res, next) => {
 
         const recruiter = await Recruiter.findOne({ email });
         if (!recruiter) {
-            return res.status(400).json({ message: 'Company doesn\'t exist' });
+            return res.status(400).json({ message: 'Recruiter doesn\'t exist' });
         }
 
         const isMatch = await bcrypt.compare(password, recruiter.password);
@@ -68,7 +91,7 @@ const login = async (req, res, next) => {
             return res.json({ message: 'Password didn\'t match' });
         }
 
-        const token = jwt.sign({ company_id: recruiter.company_id }, process.env.COM_SECRET, { expiresIn: '300s' }); //mak
+        const token = jwt.sign({ recruiter_id: recruiter._id ,company_id: recruiter.company_id }, process.env.COM_SECRET, { expiresIn: '1h' }); //mak
         res.json({ message: 'Recruiter Login Success', token });
         
         const mailTransporter = nodemailer.createTransport({
@@ -101,4 +124,4 @@ const login = async (req, res, next) => {
 };
 
 
-export default {login, register}
+export default {login, register, viewApplications}

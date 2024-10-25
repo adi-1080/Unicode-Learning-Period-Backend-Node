@@ -17,7 +17,7 @@ const applicationSchema = new Schema({
     applied_date:{
         type:Date
     }
-})
+}, {timestamps: true})
 
 const Application = mongoose.model('Application', applicationSchema) 
 export default Application

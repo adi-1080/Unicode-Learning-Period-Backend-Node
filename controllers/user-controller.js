@@ -72,56 +72,57 @@ const register = (req,res,next) => {
     })
 }
 
-const login = (req,res,next) => {
-    let email = req.body.email
-    let password = req.body.password
+const login = async (req, res, next) => {
+    const email = req.body.email;
+    const password = req.body.password;
 
-    User.findOne({$or: [{email:email},{phone:email}]})
-    .then((User) => {
-        if(User){
-            bcrypt.compare(password, User.password, function(err,result){
-                
-                if(result){
-                    let token = jwt.sign({name: User.name}, process.env.SECRET_KEY, {expiresIn: '300s'})
-                    res.json({
-                        message: 'Login successful',
-                        token: token
-                    })
-                } else{
-                    res.json({
-                        message: 'Password didn\'t matched'
-                    })
-                }
-            })
-        } else{
-            res.json({
-                message: "No User found"
-            })
+    try {
+        const user = await User.findOne({ $or: [{ email: email }, { phone: email }] });
+        if (!user) {
+            return res.status(404).json({ message: "No User found" });
         }
-    })
-    let mailTransporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASSWORD
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Password didn\'t match' });
         }
-    })
-    
-    let details = {
-        from: 'adityagupta5277@gmail.com',
-        to: req.body.email,
-        subject: 'Testing our nodemailer',
-        text: 'Hi Aditya, How are you ?'
+
+        const token = jwt.sign({ user_id: user._id, name: user.name }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        res.json({
+            message: 'Login successful',
+            token: token
+        });
+
+        // Mail transporter setup
+        let mailTransporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
+            }
+        });
+
+        // Email details
+        let details = {
+            from: 'adityagupta5277@gmail.com',
+            to: req.body.email,
+            subject: 'Testing our nodemailer',
+            text: 'Hi Aditya, How are you ?'
+        };
+
+        // Sending email
+        mailTransporter.sendMail(details, (err) => {
+            if (err) {
+                console.log("An error occurred!", err);
+            } else {
+                console.log('Email has been sent!');
+            }
+        });
+
+    } catch (error) {
+        console.error('Error logging in:', error);
+        res.status(500).json({ message: 'An error occurred during login', error});
     }
-    
-    mailTransporter.sendMail(details, (err)=>{
-        if(err){
-            console.log("An error occured !",err);
-        }
-        else{
-            console.log('Email has sent !');
-        }
-    })
 }
 
 // Show the list of Users
