@@ -18,7 +18,7 @@ const viewApplications = async (req,res) => {
         console.log("Job IDs for this company:", list_jobIds);//
 
         const list_applications = await Application.find({job_id: {$in: list_jobIds}})
-        .populate('user_id','name email')
+        .populate('user_id','name email contact resume_url')
         .populate('job_id','title description')
 
         res.status(200).json({message: "Viewing applicants",list_applications})

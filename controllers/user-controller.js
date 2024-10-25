@@ -24,14 +24,10 @@ const uploadImage = (req,res,next) => {
     }
 }
 
-const register = (req,res,next) => {
-    bcrypt.hash(req.body.password,12, function(err, hashedPass){
-        if(err){
-            res.json({
-                error: err
-            })
-        }
-        
+const register = async (req, res, next) => {
+    try {
+        const hashedPass = await bcrypt.hash(req.body.password, 12);
+
         let user = new User({
             name: req.body.name,
             email: req.body.email,
@@ -41,35 +37,38 @@ const register = (req,res,next) => {
             field_of_interest: req.body.field_of_interest,
             experience_level: req.body.experience_level,
             bio: req.body.bio   
-        })
+        });
+
         if (req.files) {
             if (req.files['avatar']) {
                 const avatarFilePath = req.files['avatar'][0].path;
-                const avatarResponse = uploadOnCloudinary(avatarFilePath);
-                user.avatar = avatarResponse.secure_url; // secure_url is provided by cloudinary
-                console.log('avatar uploaded');
+                const avatarResponse = await uploadOnCloudinary(avatarFilePath);
+                user.avatar = avatarResponse.secure_url; // Ensure this is set
+                console.log('avatar uploaded : ',user.avatar);
             }
 
             if (req.files['resume_url']) {
                 const resumeFilePath = req.files['resume_url'][0].path;
-                const resumeResponse = uploadOnCloudinary(resumeFilePath);
-                user.resume_url = resumeResponse.secure_url; 
-                console.log('resume uploaded');
+                const resumeResponse = await uploadOnCloudinary(resumeFilePath);
+                user.resume_url = resumeResponse.secure_url; // Ensure this is set
+                console.log('resume uploaded : ',user.resume_url);
             }
         }
         
-        user.save()
-        .then((User) => {
-            res.json({
-                message: "User registered successfully"
-            })
-        })
-        .catch((err) => {
-            res.json({
-                message: "Some error occured"
-            })
-        })
-    })
+        const savedUser = await user.save(); // Save user to database
+
+        // Include avatar and resume URL in the response
+        res.status(201).json({
+            message: "User registered successfully",
+            savedUser
+        });
+    } catch (err) {
+        console.error('Error during registration:', err);
+        res.status(500).json({
+            message: "Some error occurred",
+            error: err
+        });
+    }
 }
 
 const login = async (req, res, next) => {
