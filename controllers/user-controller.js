@@ -43,21 +43,20 @@ const register = async (req, res, next) => {
             if (req.files['avatar']) {
                 const avatarFilePath = req.files['avatar'][0].path;
                 const avatarResponse = await uploadOnCloudinary(avatarFilePath);
-                user.avatar = avatarResponse.secure_url; // Ensure this is set
+                user.avatar = avatarResponse.secure_url; // Provided by cloudinary to secure the url
                 console.log('avatar uploaded : ',user.avatar);
             }
 
             if (req.files['resume_url']) {
                 const resumeFilePath = req.files['resume_url'][0].path;
                 const resumeResponse = await uploadOnCloudinary(resumeFilePath);
-                user.resume_url = resumeResponse.secure_url; // Ensure this is set
+                user.resume_url = resumeResponse.secure_url; // Provided by cloudinary to secure the url
                 console.log('resume uploaded : ',user.resume_url);
             }
         }
         
-        const savedUser = await user.save(); // Save user to database
+        const savedUser = await user.save();
 
-        // Include avatar and resume URL in the response
         res.status(201).json({
             message: "User registered successfully",
             savedUser

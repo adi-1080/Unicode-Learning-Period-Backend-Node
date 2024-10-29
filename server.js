@@ -14,6 +14,7 @@ import companyRoute from './routes/company-route.js'
 import recruiterRoute from './routes/recruiter-route.js'
 import jobRoute from './routes/job-route.js'
 import applicationRoute from './routes/application-route.js'
+import followRoute from './routes/follow-route.js'
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -62,3 +63,4 @@ app.use('/company',companyRoute)
 app.use('/recruiter',recruiterRoute)
 app.use('/job',jobRoute)
 app.use('/application',applicationRoute)
+app.use('/follow-following',followRoute)
