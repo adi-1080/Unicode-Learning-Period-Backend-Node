@@ -32,6 +32,14 @@ const userSchema = new Schema({
     },
     bio:{
         type: String
+    },
+    follower_count:{
+        type: Number,
+        default: 0
+    },
+    following_count:{
+        type: Number,
+        default: 0
     }
 
 }, {timestamps: true}) // TIMESTAMPS ADDS TWO ATTRIBUTES TO THE DATA, CREATED_AT AND UPDATED_AT

@@ -26,6 +26,13 @@ const uploadImage = (req,res,next) => {
 
 const register = async (req, res, next) => {
     try {
+        const email_to_check = req.body.email
+        const userExists = await User.findOne({email: email_to_check})
+
+        if(userExists){
+            return res.status(400).json({message: `User with email ${email_to_check} already exists!`})
+        }
+
         const hashedPass = await bcrypt.hash(req.body.password, 12);
 
         let user = new User({
