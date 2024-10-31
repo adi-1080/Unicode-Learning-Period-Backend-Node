@@ -3,7 +3,17 @@ import User from "../models/user-model.js";
 
 const follow = async(req,res) => {
     try{
+        const authorized_user_id = req.user.user_id
         const {follower_id, following_id, following_type} = req.body
+
+        console.log("Authorized user id",authorized_user_id); //
+        console.log("Follower's user id",follower_id); //
+        console.log("Type of authorized user id",typeof(authorized_user_id)); //
+        console.log("Type of follower id",typeof(follower_id)); //
+
+        if(authorized_user_id != follower_id){
+            return res.status(500).json({message: 'You are not allowed to use this'})
+        }
 
         const alreadyFollowed = await Follow.findOne({follower_id, following_id})
 
@@ -35,8 +45,10 @@ const follow = async(req,res) => {
 
 const getFollowers = async(req,res) => {
     try{
-        const user_id = req.params
-        const followers = await Follow.find({following_id: user_id, following_type: 'User'}).populate('follower_id')
+        const {user_id} = req.params
+        const {following_type} = req.query
+
+        const followers = await Follow.find({following_id: user_id, following_type}).populate('follower_id')
         res.status(200).json({followers})
     }
     catch(err){
@@ -44,4 +56,35 @@ const getFollowers = async(req,res) => {
     }
 }
 
-export default {follow, getFollowers}
+const unfollow = async(req,res) => {
+    try{
+        const {follower_id, following_id, following_type} = req.body
+
+        const alreadyFollowing = Follow.findOne({follower_id, following_id, following_type})
+
+        if(!alreadyFollowing){
+            return res.status(404).json({message: "You are already not following"})
+        }
+
+        await Follow.deleteOne({follower_id, following_id, following_type})
+
+        if(following_type == "User"){
+            await User.findByIdAndUpdate(follower_id, {$inc: {following_count: -1}})
+            await User.findByIdAndUpdate(following_id, {$inc: {follower_count: -1}})
+        }
+        else if(following_type == "Company"){
+            await Company.findByIdAndUpdate(follower_id, {$inc: {following_count: -1}})
+            await Company.findByIdAndUpdate(following_id, {$inc: {follower_count: -1}})
+        }
+        else{
+            return res.status(400).json({message: "Following type invalid"})
+        }
+
+        res.status(200).json({message: "Unfollowed successfully"})
+    }
+    catch(err){
+        res.status(500).json({message: "Could not unfollow", error: err})
+    }
+}
+
+export default {follow, getFollowers, unfollow}

@@ -1,4 +1,5 @@
 import Job from "../models/job-model.js";
+import Company from "../models/company-model.js"
 
 const createJob = async (req,res) => {
     try{

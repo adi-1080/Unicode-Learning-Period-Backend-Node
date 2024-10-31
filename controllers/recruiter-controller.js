@@ -10,6 +10,15 @@ import Job from "../models/job-model.js";
 
 const viewApplications = async (req,res) => {
     try {
+        const authorized_recruiter_id = req.recruiter._id
+        const a = authorized_recruiter_id.toString()
+        const {recruiter_id} = req.params
+        console.log("Recruiter id",(recruiter_id));
+        console.log("Auth Recruiter id",(a));
+        if(a != recruiter_id){
+            return res.status(500).json({message: "You are not allowed to use this"})
+        }
+
         console.log("Fetching jobs for company:", req.recruiter.company_id);//
 
         const list_jobs = await Job.find({company_id: req.recruiter.company_id})
@@ -62,12 +71,14 @@ const register = async(req,res,next)=>{
             company.save()
             .then((result)=>{
                 res.json({
-                    message: 'Recruiter Registered Successfully'
+                    message: 'Recruiter Registered Successfully',
+                    result
                 })
             })
-            .catch((err)=>{
+            .catch((error)=>{
                 res.json({
-                    message: 'Couldn\'t register recruiter'
+                    message: 'Couldn\'t register recruiter',
+                    error
                 })
             })
         })
@@ -86,12 +97,12 @@ const login = async (req, res, next) => {
             return res.status(400).json({ message: 'Recruiter doesn\'t exist' });
         }
 
-        const isMatch = await bcrypt.compare(password, recruiter.password);
+        const isMatch = bcrypt.compare(password, recruiter.password);
         if (!isMatch) {
             return res.json({ message: 'Password didn\'t match' });
         }
 
-        const token = jwt.sign({ recruiter_id: recruiter._id ,company_id: recruiter.company_id }, process.env.COM_SECRET, { expiresIn: '1h' }); //mak
+        const token = jwt.sign({ _id: recruiter._id ,company_id: recruiter.company_id }, process.env.COM_SECRET, { expiresIn: '1h' }); //mak
         res.json({ message: 'Recruiter Login Success', token });
         
         const mailTransporter = nodemailer.createTransport({

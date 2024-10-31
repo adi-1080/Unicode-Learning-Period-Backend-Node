@@ -7,6 +7,6 @@ import authRecruiter from '../middlewares/authRecruiter.js'
 
 router.post('/login',recruiterController.login)
 router.post('/register',recruiterController.register)
-router.get('/view-applicants',authRecruiter,recruiterController.viewApplications)
+router.get('/:recruiter_id/view-applicants',authenticateRoute.authRecruiter,recruiterController.viewApplications)
 
 export default router

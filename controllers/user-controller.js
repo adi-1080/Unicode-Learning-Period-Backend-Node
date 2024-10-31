@@ -87,12 +87,12 @@ const login = async (req, res, next) => {
             return res.status(404).json({ message: "No User found" });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: 'Password didn\'t match' });
         }
 
-        const token = jwt.sign({ user_id: user._id, name: user.name }, process.env.SECRET_KEY, { expiresIn: '1h' });
+        const token = jwt.sign({ _id: user._id, name: user.name, email: user.email }, process.env.SECRET_KEY, { expiresIn: '1h' });
         res.json({
             message: 'Login successful',
             token: token
@@ -188,7 +188,7 @@ const update = async(req,res,next) => {
     let UserID = req.body.UserID;
 
     // Input updated data from user
-    let updatedData = {
+    const updatedData = {
         sapid: req.body.sapid,
         name: req.body.name,
         department: req.body.department,

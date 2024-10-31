@@ -20,7 +20,15 @@ const companySchema = new Schema({
     website_url:{
         type: String
     },
-    recruiters: [{type: mongoose.Schema.Types.ObjectId, ref:'Recruiter'}]
+    recruiters: [{type: mongoose.Schema.Types.ObjectId, ref:'Recruiter'}],
+    followers_count:{
+        type: Number,
+        default: 0
+    },
+    following_count:{
+        type: Number,
+        default: 0
+    }
 }, {timestamps: true})
 
 const Company = mongoose.model('Company',companySchema)
