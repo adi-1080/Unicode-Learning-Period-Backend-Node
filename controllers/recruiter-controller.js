@@ -21,7 +21,7 @@ const viewApplications = async (req,res) => {
 
         console.log("Fetching jobs for company:", req.recruiter.company_id);//
 
-        const list_jobs = await Job.find({company_id: req.recruiter.company_id})
+        const list_jobs = await Job.find({recruiter_id: req.recruiter._id, company_id: req.recruiter.company_id})
         const list_jobIds = list_jobs.map(job => job._id)
 
         console.log("Job IDs for this company:", list_jobIds);//

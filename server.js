@@ -4,7 +4,10 @@ import mongoose from 'mongoose'
 import morgan from 'morgan'
 import bodyParser from 'body-parser'
 import connectDB from './db/connect-db.js'
-
+import cors from 'cors'
+import pino from 'pino'
+import pinoHTTP from 'pino-http'
+import fs from 'fs'
 
 import dotenv from 'dotenv'
 dotenv.config()
@@ -50,10 +53,26 @@ const PORT = process.env.PORT || 8000
 
 // app.use(morgan(':id :param :method :status :url "HTTP/:http-version"',{stream: accessLogStream}))
 
-function assignID(req,res,next){
-    req.id = uuidv4()
-    next()
+// function assignID(req,res,next){
+//     req.id = uuidv4()
+//     next()
+// }
+
+const logger = pino({
+    transport:{
+        target:'pino-pretty',
+        options:{
+            colorize:true
+        }
+    }
+},fs.createWriteStream('./access.log', { flags: 'a' }))
+app.use(pinoHTTP({logger}))
+
+const corsOptions = {
+    origin: 'http://example.com',
+    optionsSuccessStatus: 200
 }
+app.use(cors(corsOptions))
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on http://${HOST}:${PORT}/`);
