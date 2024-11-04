@@ -6,11 +6,7 @@ dotenv.config()
 const connectDB = async() => {
     try{
         // CONNECTING TO MONGODB ATLAS USING MONGOOSE
-        await mongoose.connect(`mongodb+srv://${process.env.MONGODB_ATLAS_UNICODE_USERNAME}:${process.env.MONGODB_ATLAS_UNICODE_PASSWORD}@${process.env.UNICODE_CLUSTER}/?retryWrites=true&w=majority&appName=${process.env.UNICODE_CLUSTER_NAME}`,{
-                useNewUrlParser:true,
-                useUnifiedTopology:true
-            }
-        )
+        mongoose.connect(`mongodb+srv://${process.env.MONGODB_ATLAS_UNICODE_USERNAME}:${process.env.MONGODB_ATLAS_UNICODE_PASSWORD}@${process.env.UNICODE_CLUSTER}/?retryWrites=true&w=majority&appName=${process.env.UNICODE_CLUSTER_NAME}`)
 
         const db = mongoose.connection
 
@@ -24,7 +20,7 @@ const connectDB = async() => {
         })
     }
     catch(err){
-        console.log("Failed to connect to database:",error);
+        console.log("Failed to connect to database:",err);
     }
     
 }
