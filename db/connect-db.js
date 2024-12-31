@@ -7,6 +7,7 @@ const connectDB = async() => {
     try{
         // CONNECTING TO MONGODB ATLAS USING MONGOOSE
         const dbURL = process.env.MONGODB_URL
+        console.log(typeof dbURL);
         mongoose.connect(dbURL)
 
         const db = mongoose.connection
