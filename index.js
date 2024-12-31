@@ -35,7 +35,7 @@ app.use('./public/uploads',express.static('uploads'))
 app.get('/',(req,res)=> res.json({msg:"Heyyy Brooo!!"}))
 
 const HOST = process.env.HOST || 'localhost'
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 3000
 
 // MORGAN TOKENS FOR SERVER SIDE LOGGING INFORMATION OF USER WHENEVER HE MAKES AN API CALL
 // morgan.token('id', function getID(req){
@@ -76,7 +76,7 @@ app.use(cors(corsOptions))
 
 // Only start the server if the environment is not 'test'
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(process.env.PORT, () => {
+    app.listen(process.env.PORT,'0.0.0.0', () => {
         console.log(`Server is running on http://${HOST}:${PORT}/`);
         console.log(`Node.js application running in ${process.env.NODE_ENV} environment`);
     });
