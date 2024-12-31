@@ -4,7 +4,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start":"node",
+    "start":"node index.js",
     "dev":"env-cmd ./config/dev.env nodemon",
     "test": "env-cmd ./config/test.env jest"
   },
