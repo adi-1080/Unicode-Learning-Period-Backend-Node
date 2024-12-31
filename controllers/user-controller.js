@@ -151,10 +151,10 @@ const show = async(req,res,next) => {
     let UserID = req.body.UserID;
     try{
         const result = await User.findById(UserID);
-        res.json({result});
+        res.status(200).json({result});
     }
     catch(error){
-        res.json({error});
+        res.status(500).json({error});
     }
 };
 

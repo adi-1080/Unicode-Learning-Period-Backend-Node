@@ -66,7 +66,7 @@ const logger = pino({
         }
     }
 },fs.createWriteStream('./access.log', { flags: 'a' }))
-app.use(pinoHTTP({logger}))
+// app.use(pinoHTTP({logger}))
 
 const corsOptions = {
     origin: 'http://example.com',
@@ -74,9 +74,13 @@ const corsOptions = {
 }
 app.use(cors(corsOptions))
 
-app.listen(PORT, ()=>{
-    console.log(`Server is running on http://${HOST}:${PORT}/`);
-})
+// Only start the server if the environment is not 'test'
+if (process.env.NODE_ENV !== 'test') {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://${HOST}:${PORT}/`);
+        console.log(`Node.js application running in ${process.env.NODE_ENV} environment`);
+    });
+}
 
 app.use('/user',userRoute)
 app.use('/company',companyRoute)
@@ -85,3 +89,5 @@ app.use('/job',jobRoute)
 app.use('/application',applicationRoute)
 app.use('/followmodel',followRoute)
 app.use('/blog',blogRoute)
+
+export default app

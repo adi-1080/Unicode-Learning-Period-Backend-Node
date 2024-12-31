@@ -3,7 +3,7 @@ import User from "../models/user-model.js";
 
 const follow = async(req,res) => {
     try{
-        const authorized_user_id = req.user.user_id
+        const authorized_user_id = req.user._id
         const {follower_id, following_id, following_type} = req.body
 
         console.log("Authorized user id",authorized_user_id); //

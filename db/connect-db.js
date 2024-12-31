@@ -6,7 +6,8 @@ dotenv.config()
 const connectDB = async() => {
     try{
         // CONNECTING TO MONGODB ATLAS USING MONGOOSE
-        mongoose.connect(`mongodb+srv://${process.env.MONGODB_ATLAS_UNICODE_USERNAME}:${process.env.MONGODB_ATLAS_UNICODE_PASSWORD}@${process.env.UNICODE_CLUSTER}/?retryWrites=true&w=majority&appName=${process.env.UNICODE_CLUSTER_NAME}`)
+        const dbURL = process.env.MONGODB_URL
+        mongoose.connect(dbURL)
 
         const db = mongoose.connection
 

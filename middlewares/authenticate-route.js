@@ -38,10 +38,10 @@ const authRecruiter = async(req,res,next) => {
 
 const checkIfAuthorizedFollower = async(req,res,next) => {
     try{
-        const authorized_user_id = req.user.user_id
+        const authorized_user_id = req.user._id
         const follower_user = req.body.follower_id
 
-        if(authorized_user_id != follower_user){
+        if(authorized_user_id.toString() != follower_user){
             return res.status(500).json({message: "You are not allowed on this route"})
         }
         next()

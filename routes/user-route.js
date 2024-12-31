@@ -10,7 +10,7 @@ router.post('/register',upload.fields([{name:'avatar'},{name:'resume_url'}]),use
 router.post('/login',userController.login)
 
 router.get('/index',authenticateRoute.authUser,userController.index)
-router.post('/show', authenticateRoute.authUser, userController.show)
+router.post('/show', userController.show)
 router.post('/store',authenticateRoute.authUser, userController.store)
 router.post('/update',authenticateRoute.authUser, userController.update)
 router.post('/delete',authenticateRoute.authUser, userController.destroy)
