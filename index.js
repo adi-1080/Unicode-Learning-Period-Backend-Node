@@ -69,7 +69,7 @@ const logger = pino({
 // app.use(pinoHTTP({logger}))
 
 const corsOptions = {
-    origin: 'http://example.com',
+    origin: 'https://adityagupta.onrender.com/',
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions))
