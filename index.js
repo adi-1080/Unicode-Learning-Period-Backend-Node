@@ -35,7 +35,7 @@ app.use('./public/uploads',express.static('uploads'))
 app.get('/',(req,res)=> res.json({msg:"Heyyy Brooo!!"}))
 
 const HOST = process.env.HOST || 'localhost'
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT
 
 // MORGAN TOKENS FOR SERVER SIDE LOGGING INFORMATION OF USER WHENEVER HE MAKES AN API CALL
 // morgan.token('id', function getID(req){
@@ -69,7 +69,7 @@ const logger = pino({
 // app.use(pinoHTTP({logger}))
 
 const corsOptions = {
-    origin: 'https://adityagupta.onrender.com/',
+    origin: '*',
     optionsSuccessStatus: 200
 }
 app.use(cors(corsOptions))
