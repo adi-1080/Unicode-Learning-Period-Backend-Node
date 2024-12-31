@@ -109,7 +109,7 @@ const login = async (req, res, next) => {
 
         // Email details
         let details = {
-            from: 'adityagupta5277@gmail.com',
+            from: process.env.EMAIL,
             to: req.body.email,
             subject: 'Testing our nodemailer',
             text: 'Hi Aditya, How are you ?'
