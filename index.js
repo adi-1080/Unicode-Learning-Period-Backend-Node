@@ -76,7 +76,7 @@ app.use(cors(corsOptions))
 
 // Only start the server if the environment is not 'test'
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(process.env.PORT,'0.0.0.0', () => {
+    app.listen(PORT, () => {
         console.log(`Server is running on http://${HOST}:${PORT}/`);
         console.log(`Node.js application running in ${process.env.NODE_ENV} environment`);
     });
