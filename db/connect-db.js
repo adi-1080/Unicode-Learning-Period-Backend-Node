@@ -18,7 +18,7 @@ const connectDB = async() => {
         })
 
         db.once('open', () => {
-            console.log('Database Connection Established');
+            console.log('MongoDB Atlas Database Connection Established');
         })
     }
     catch(err){
