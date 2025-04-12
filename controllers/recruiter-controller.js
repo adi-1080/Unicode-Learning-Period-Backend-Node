@@ -41,6 +41,12 @@ const register = async(req,res,next)=>{
     try {
 
         const {name, age, gender, email, password, join_date, qualification, current_position, salary, company_id} = req.body;
+
+        const recruiter = Recruiter.findOne({email});
+
+        if(recruiter){
+            res.status(400).json({message: "Recruiter already exists"});
+        }
         const company = await Company.findById(company_id);
         if(!company){
             return res.status(400).json({message: 'Company not found'})
